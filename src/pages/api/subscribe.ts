@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { db, Subscriber, eq } from "astro:db";
 
 export const GET: APIRoute = async () => {
     try {
@@ -28,15 +27,29 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const { email } = body;
-    console.log(email)
+    // console.log(email)
+
+     // Validate email format using regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Validate input (if email is missing or invalid)
+    if (!email || !emailRegex.test(email)) {
+      return new Response(JSON.stringify({ message: "Email is required" }), {
+        status: 400, // Bad Request
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     // Fetch existing subscribers
     const response = await fetch("http://localhost:1337/api/subscribers");
     const data = await response.json();
-    const existingEmails = data.data.map((subscriber: any) => subscriber?.attribute?.email)
+    // console.log(data)
+    const existingEmails = data.data.map(
+      (subscriber: any) => subscriber?.attributes?.email
+    );
 
     // check if email exists
-    if(existingEmails.includes(email)){
+    if (existingEmails.includes(email)) {
       return new Response(
         JSON.stringify({ message: "Email is already registered" }),
         {
@@ -48,6 +61,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    // Add subscriber to strapi 
     const strapiResponse = await fetch(
       "http://localhost:1337/api/subscribers",
       {
@@ -72,14 +86,14 @@ export const POST: APIRoute = async ({ request }) => {
         }
       );
     } else {
-      console.log(strapiData.error.details)
+      console.log(strapiData.error);
       throw new Error(strapiData.error?.message || "Subscription failed");
     }
   } catch (error) {
-    console.error("Error adding subscriber:", error);
-    console.log(error);
+    // console.error("Error adding subscriber:", error);
+    // console.log((error as Error)?.message);
     return new Response(
-      JSON.stringify({ message: "Error adding subscriber" }),
+      JSON.stringify({ message: (error as Error)?.message }),
       {
         status: 500,
         headers: {

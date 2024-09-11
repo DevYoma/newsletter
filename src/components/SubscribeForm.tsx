@@ -14,13 +14,15 @@ const SubscribeForm = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email }),
+          body: JSON.stringify({ email: email.trim() }),
         });
 
         const data = await response.json();
         if(response.ok){
+            alert(data.message)
             setMessage(data.message);
             setEmail('');
+            window.location.href = '/send-newsletter';
         }else if (response.status === 409) {
             // Handle conflict (email already registered)
             setMessage('Email already exists');  // Display "Email is already registered" message

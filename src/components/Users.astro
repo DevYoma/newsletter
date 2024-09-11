@@ -1,0 +1,11 @@
+---
+const response = await fetch('http://localhost:1337/api/subscribers');
+const data = await response.json();
+
+const userList = (data.data.map((user: { attributes: { email: string; }; }) => user.attributes.email));
+---
+
+<h1>Users Section </h1>
+{userList.map((user: string) => (
+    <p>{user}</p>
+))}

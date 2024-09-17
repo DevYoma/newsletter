@@ -34,7 +34,37 @@ export const POST: APIRoute = async ({ request }) => {
         to: email,
         subject: subject, 
         text: content, 
-        // html: "<b>Hello world?</b>", // html body
+        html: `
+          <div style="font-family: Arial, sans-serif; color: #333;">
+            <div style="background-color: #f4f4f4; padding: 20px;">
+              <h2 style="color: #2c3e50; text-align: center;">Yoma's Dispatch: Code & Beyond</h2>
+            </div>
+            
+            <div style="padding: 20px;">
+              <p style="font-size: 16px;">Hello,</p>
+              <p style="font-size: 16px; line-height: 1.5;">
+                ${content} <!-- This is the main content of your email -->
+              </p>
+              
+              <div style="margin-top: 30px;">
+                <p style="font-size: 14px; color: #555;">
+                  Stay tuned for more exciting insights in tech, coding, and personal growth.
+                </p>
+                <p style="font-size: 14px; color: #555;">
+                  Best regards,<br/>
+                  Yoma from <strong>Code & Beyond</strong>
+                </p>
+              </div>
+            </div>
+            
+            <div style="background-color: #f4f4f4; padding: 10px; text-align: center;">
+              <p style="font-size: 12px; color: #888;">
+                If you no longer wish to receive these emails, you can 
+                <a href="https://yourunsubscribeurl.com" style="color: #3498db;">unsubscribe here</a>.
+              </p>
+            </div>
+          </div>
+        `
       });
     }
 
